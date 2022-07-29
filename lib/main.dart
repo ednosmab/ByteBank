@@ -52,10 +52,17 @@ class FormularioTransferencia extends StatelessWidget {
         ElevatedButton(
             onPressed: () {
               debugPrint('clicou no confirmar');
+
+              // Para tratar o Fatal error de forma mais elegante: caso o valor
+              // seja nulo, esse valor receberá zero e impede de gerar uma Fatal Error
               final int numeroConta =
-                  int.parse(_controladorCampoNumeroConta.text);
+                  int.tryParse(_controladorCampoNumeroConta.text) != null
+                      ? int.parse(_controladorCampoNumeroConta.text)
+                      : 0;
               final double valorTransferencia =
-                  double.parse(_controladorCampoValor.text);
+                  double.tryParse(_controladorCampoValor.text) != null
+                      ? double.parse(_controladorCampoValor.text)
+                      : 0;
               if (numeroConta != null && valorTransferencia != null) {
                 final transferenciaCriada =
                     Transferencia(valorTransferencia, numeroConta);
