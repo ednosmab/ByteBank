@@ -17,6 +17,23 @@ class FormularioTransferencia extends StatelessWidget {
       TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
 
+  void _criaTransferencia() {
+    // Para tratar o Fatal error de forma mais elegante: caso o valor
+    // seja nulo, esse valor receberá zero e impede de gerar uma Fatal Error
+    final int numeroConta =
+        int.tryParse(_controladorCampoNumeroConta.text) != null
+            ? int.parse(_controladorCampoNumeroConta.text)
+            : 0;
+    final double valorTransferencia =
+        double.tryParse(_controladorCampoValor.text) != null
+            ? double.parse(_controladorCampoValor.text)
+            : 0;
+    if (numeroConta != null && valorTransferencia != null) {
+      final transferenciaCriada =
+          Transferencia(valorTransferencia, numeroConta);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,53 +41,53 @@ class FormularioTransferencia extends StatelessWidget {
         title: Text('Criando Transferência'),
       ),
       body: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: TextField(
-            controller: _controladorCampoNumeroConta,
-            style: TextStyle(fontSize: 24.0),
-            decoration: InputDecoration(
-              labelText: 'Número Conta',
-              hintText: '0000',
-            ),
-            keyboardType: TextInputType.number,
-          ),
+        Editor(
+          controlador: _controladorCampoNumeroConta,
+          rotulo: 'Digite o número da conta',
+          dica: '0000',
         ),
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: TextField(
-            controller: _controladorCampoValor,
-            style: TextStyle(fontSize: 24.0),
-            decoration: InputDecoration(
-              icon: Icon(Icons.monetization_on),
-              labelText: 'Valor',
-              hintText: '0.00',
-            ),
-            keyboardType: TextInputType.number,
-          ),
+        Editor(
+          controlador: _controladorCampoValor,
+          rotulo: 'Informe o valor da transferência',
+          dica: '0.00',
+          icone: Icons.monetization_on,
         ),
         ElevatedButton(
-            onPressed: () {
-              debugPrint('clicou no confirmar');
-
-              // Para tratar o Fatal error de forma mais elegante: caso o valor
-              // seja nulo, esse valor receberá zero e impede de gerar uma Fatal Error
-              final int numeroConta =
-                  int.tryParse(_controladorCampoNumeroConta.text) != null
-                      ? int.parse(_controladorCampoNumeroConta.text)
-                      : 0;
-              final double valorTransferencia =
-                  double.tryParse(_controladorCampoValor.text) != null
-                      ? double.parse(_controladorCampoValor.text)
-                      : 0;
-              if (numeroConta != null && valorTransferencia != null) {
-                final transferenciaCriada =
-                    Transferencia(valorTransferencia, numeroConta);
-                debugPrint('$transferenciaCriada');
-              }
-            },
-            child: Text('Confirmar'))
+            onPressed: () => _criaTransferencia(), child: Text('Confirmar'))
       ]),
+    );
+  }
+}
+
+class Editor extends StatelessWidget {
+  final TextEditingController controlador;
+  final String rotulo;
+  final String dica;
+
+  // Nessa versão do flutter 3.0.5, para atribuir valores nulos no tipo
+  // IconData é necessário colocar sina de ?
+  IconData? icone = null;
+
+  Editor(
+      {required this.controlador,
+      required this.rotulo,
+      required this.dica,
+      this.icone});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: TextField(
+        controller: controlador,
+        style: TextStyle(fontSize: 24.0),
+        decoration: InputDecoration(
+          // Removendo o espaço em branco, que seria o local do ícone, no campo da conta
+          icon: icone != null ? Icon(icone) : null,
+          labelText: rotulo,
+          hintText: dica,
+        ),
+        keyboardType: TextInputType.number,
+      ),
     );
   }
 }
