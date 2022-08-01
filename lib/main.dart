@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 
 void main() => runApp(ByteBank());
@@ -7,7 +9,7 @@ class ByteBank extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-      body: FormularioTransferencia(),
+      body: ListaTransferencia(),
     ));
   }
 }
@@ -17,7 +19,7 @@ class FormularioTransferencia extends StatelessWidget {
       TextEditingController();
   final TextEditingController _controladorCampoValor = TextEditingController();
 
-  void _criaTransferencia() {
+  void _criaTransferencia(BuildContext context) {
     // Para tratar o Fatal error de forma mais elegante: caso o valor
     // seja nulo, esse valor receberá zero e impede de gerar uma Fatal Error
     final int numeroConta =
@@ -31,6 +33,10 @@ class FormularioTransferencia extends StatelessWidget {
     if (numeroConta != null && valorTransferencia != null) {
       final transferenciaCriada =
           Transferencia(valorTransferencia, numeroConta);
+
+      debugPrint('Criando Transferência');
+      debugPrint('$transferenciaCriada');
+      Navigator.pop(context, transferenciaCriada);
     }
   }
 
@@ -53,7 +59,8 @@ class FormularioTransferencia extends StatelessWidget {
           icone: Icons.monetization_on,
         ),
         ElevatedButton(
-            onPressed: () => _criaTransferencia(), child: Text('Confirmar'))
+            onPressed: () => _criaTransferencia(context),
+            child: Text('Confirmar'))
       ]),
     );
   }
@@ -93,21 +100,39 @@ class Editor extends StatelessWidget {
 }
 
 class ListaTransferencia extends StatelessWidget {
+  final List<Transferencia> _transferencias = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Trasnferência'),
       ),
-      body: Column(
-        children: [
-          ItemTransferencia(Transferencia(100.0, 10001)),
-          ItemTransferencia(Transferencia(200.0, 30001)),
-          ItemTransferencia(Transferencia(300.0, 70020)),
-        ],
+      body: ListView.builder(
+        itemCount: _transferencias.length,
+        itemBuilder: (context, indice) {
+          final transferencia = _transferencias[indice];
+          return ItemTransferencia(transferencia);
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          // Callback assíncrona para trabalhar de forma paralela com a tela
+          // de formulário
+          final Future<Transferencia?> future =
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return FormularioTransferencia();
+          }));
+          // usando o then a thread do formulário de transferência não fica preso
+          // esperando uma callback para a transferência ser criada
+          future.then((transferenciaRecebida) {
+            debugPrint('chegou no then');
+            debugPrint('$transferenciaRecebida');
+            if (transferenciaRecebida != null) {
+              _transferencias.add(transferenciaRecebida);
+            }
+          });
+        },
         child: Icon(Icons.add),
       ),
     );
