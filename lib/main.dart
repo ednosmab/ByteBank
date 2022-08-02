@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(ByteBank());
@@ -46,7 +44,10 @@ class FormularioTransferencia extends StatelessWidget {
       appBar: AppBar(
         title: Text('Criando Transferência'),
       ),
-      body: Column(children: [
+      // SingleChildScrollView atribui ao Column a rolagem em Sroll, isso impede
+      // que o layout quebre
+      body: SingleChildScrollView(
+          child: Column(children: [
         Editor(
           controlador: _controladorCampoNumeroConta,
           rotulo: 'Digite o número da conta',
@@ -61,7 +62,7 @@ class FormularioTransferencia extends StatelessWidget {
         ElevatedButton(
             onPressed: () => _criaTransferencia(context),
             child: Text('Confirmar'))
-      ]),
+      ])),
     );
   }
 }
@@ -99,9 +100,13 @@ class Editor extends StatelessWidget {
   }
 }
 
-class ListaTransferencia extends StatelessWidget {
-  final List<Transferencia> _transferencias = [];
+class ListaTransferencia extends StatefulWidget {
+  @override
+  _ListaTransferencia createState() => _ListaTransferencia();
+}
 
+class _ListaTransferencia extends State<ListaTransferencia> {
+  final List<Transferencia> _transferencias = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,7 +134,13 @@ class ListaTransferencia extends StatelessWidget {
             debugPrint('chegou no then');
             debugPrint('$transferenciaRecebida');
             if (transferenciaRecebida != null) {
-              _transferencias.add(transferenciaRecebida);
+              debugPrint('Passei por aqui');
+              debugPrint('!!!!!!!!!!$transferenciaRecebida texto!!!!!');
+              // adicionando nova transferência
+              setState(() {
+                _transferencias.add(transferenciaRecebida);
+              });
+              debugPrint('Lista de transfe $_transferencias');
             }
           });
         },
