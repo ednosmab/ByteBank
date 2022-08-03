@@ -5,10 +5,17 @@ void main() => runApp(ByteBank());
 class ByteBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = ThemeData();
     return MaterialApp(
-        home: Scaffold(
-      body: ListaTransferencia(),
-    ));
+      theme: theme.copyWith(
+        primaryColor: Colors.green[900],
+        backgroundColor: Colors.white,
+        colorScheme: theme.colorScheme.copyWith(
+          secondary: Colors.green[900],
+        ),
+      ),
+      home: ListaTransferencia(),
+    );
   }
 }
 
@@ -43,9 +50,11 @@ class FormularioTransferencia extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Criando Transferência'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       // SingleChildScrollView atribui ao Column a rolagem em Sroll, isso impede
       // que o layout quebre
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
           child: Column(children: [
         Editor(
@@ -60,8 +69,14 @@ class FormularioTransferencia extends StatelessWidget {
           icone: Icons.monetization_on,
         ),
         ElevatedButton(
-            onPressed: () => _criaTransferencia(context),
-            child: Text('Confirmar'))
+          onPressed: () => _criaTransferencia(context),
+          child: Text('Confirmar'),
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(20),
+            primary: Theme.of(context).primaryColor, // background
+            onPrimary: Colors.white, // foreground
+          ),
+        )
       ])),
     );
   }
@@ -112,7 +127,9 @@ class _ListaTransferencia extends State<ListaTransferencia> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Trasnferência'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
+      backgroundColor: Theme.of(context).backgroundColor,
       body: ListView.builder(
         itemCount: _transferencias.length,
         itemBuilder: (context, indice) {
