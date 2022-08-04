@@ -1,16 +1,17 @@
-# bytebank
+# Bytebank
 
-A new Flutter project.
+Projeto de conclusão de curso de fundamentos do flutter
 
-## Getting Started
+Projeto que simula uma tranferência bancária simples via formulário.
 
-This project is a starting point for a Flutter application.
+Neste projeto aprendi como dar o primeiro passo que é criar um projeto pelo prompt do windows com o comando: flutter create bytebank e rodá-lo no emulador android com o comando: flutter run
 
-A few resources to get you started if this is your first Flutter project:
+Aprendi que o flutter é composto por Widgets, que são componentes que estruturam toda a aplicação
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Vi diversos widgets, através do Material Componets, como Scaffold, AppBar, Container, Column e entre outros
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Aprendi a como montar telas e navegar entre elas. A passar informações entre telas e a uma forma de interação, via formulário, com o usuário.
+
+Aprendi a separar em partes o projeto, realizar extração para refatorar o código, abstração para criar as classes de cada tela, utilizar o import para o pacote do Material do flutter e dos widgets dentro do projeto.
+
+Agradeço ao curso da Alura Flutter: criando um app, que me permitiu expandir meus conhecimentos e ver formas diferentes de criar uma aplicação, simples, do zero.
